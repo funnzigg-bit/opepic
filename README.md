@@ -6,7 +6,7 @@ IranSignal Pro is a Next.js App Router OSINT-style command center for monitoring
 
 - Next.js App Router + TypeScript
 - Tailwind CSS + local shadcn-style UI primitives
-- Prisma ORM + SQLite for local development
+- Prisma ORM + PostgreSQL
 - Zod validation
 - SSE realtime stream
 - `react-grid-layout` widget dashboard
@@ -39,13 +39,13 @@ Open `http://localhost:3000/dashboard`.
 Use `.env.example` as the portable baseline:
 
 ```env
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/iransignal?schema=public"
 OPENAI_API_KEY=""
 NEXTAUTH_SECRET="replace-me"
 NEXTAUTH_URL="http://localhost:3000"
 ```
 
-If your local Prisma runtime has trouble resolving a relative SQLite path, replace `DATABASE_URL` with an absolute `file:/.../prisma/dev.db` path.
+Use a real Postgres instance for both local and hosted deployments. Good fits: Vercel Postgres, Neon, Supabase, or Railway.
 
 ## Useful Commands
 
@@ -70,7 +70,28 @@ npm run build
 
 ## Deployment Notes
 
-- Swap SQLite for Postgres by changing `provider` and `DATABASE_URL`.
+- Set `DATABASE_URL` to your hosted Postgres connection string in Vercel Project Settings.
+- Run `npx prisma db push` against that database before the first production deploy, or use a migration workflow if you want tracked schema history.
 - Replace local cron with Vercel Cron calling `POST /api/ingest`.
 - Wire real auth providers into `auth.ts`.
 - Replace demo/fallback connectors with credentialed provider integrations for production feeds.
+
+## Vercel Deploy
+
+```bash
+vercel login
+vercel link
+vercel env add DATABASE_URL
+vercel env add NEXTAUTH_SECRET
+vercel env add NEXTAUTH_URL
+vercel env add OPENAI_API_KEY
+vercel --prod
+```
+
+After the env vars are set:
+
+```bash
+npx prisma db push
+npm run seed
+vercel --prod
+```

@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardData } from "@/lib/server/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function AlertsPage() {
   const data = await getDashboardData();
 

@@ -2,6 +2,8 @@ import { AppShell } from "@/components/shell/app-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardData } from "@/lib/server/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   const data = await getDashboardData();
 

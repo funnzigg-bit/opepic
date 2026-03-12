@@ -6,6 +6,8 @@ import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
 import { LiveStream } from "@/components/dashboard/live-stream";
 import { getDashboardData } from "@/lib/server/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const data = await getDashboardData();
   const commandCenter = data.layouts.find((layout) => layout.name === "Command Center") ?? data.layouts[0];

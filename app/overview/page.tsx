@@ -4,6 +4,8 @@ import { FeedList } from "@/components/dashboard/feed-list";
 import { MiniChart } from "@/components/dashboard/mini-chart";
 import { getDashboardData } from "@/lib/server/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function OverviewPage() {
   const data = await getDashboardData();
 
