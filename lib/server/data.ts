@@ -1,28 +1,8 @@
 import { Confidence, Sentiment } from "@prisma/client";
 import { subHours } from "date-fns";
 import { prisma } from "@/lib/db";
+import { getDemoDashboardData } from "@/lib/server/demo-data";
 import { formatThreatcon, parseJsonArray, safeJsonParse, scenarioClock } from "@/lib/utils";
-
-function emptyDashboardData() {
-  return {
-    items: [],
-    sources: [],
-    alertRules: [],
-    alertHits: [],
-    layouts: [],
-    widgets: [],
-    auditLog: [],
-    degraded: true,
-    kpis: {
-      escalationScore: 42,
-      threatcon: formatThreatcon(42),
-      itemsLastHour: 0,
-      alerts: 0,
-      timer: scenarioClock(),
-      activeSources: 0
-    }
-  };
-}
 
 export async function getDashboardData() {
   try {
@@ -59,6 +39,10 @@ export async function getDashboardData() {
             alertHits.length * 1.5
         )
       ) || 42;
+
+    if (items.length === 0 && sources.length === 0 && layouts.length === 0) {
+      return getDemoDashboardData("empty");
+    }
 
     return {
       items: items.map((item) => ({
@@ -98,6 +82,7 @@ export async function getDashboardData() {
         details: safeJsonParse(entry.detailsJson, {})
       })),
       degraded: false,
+      degradedReason: null,
       kpis: {
         escalationScore,
         threatcon: formatThreatcon(escalationScore),
@@ -109,6 +94,6 @@ export async function getDashboardData() {
     };
   } catch (error) {
     console.error("Dashboard data unavailable", error);
-    return emptyDashboardData();
+    return getDemoDashboardData("error");
   }
 }

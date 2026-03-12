@@ -64,6 +64,7 @@ function renderWidget(item: WidgetLayoutItem, feedItems: FeedItem[]) {
 export function DashboardGrid({ initialLayout, items }: { initialLayout: WidgetLayoutItem[]; items: FeedItem[] }) {
   const [layout, setLayout] = useState<Layout[]>(initialLayout);
   const [widgets, setWidgets] = useState<WidgetLayoutItem[]>(initialLayout);
+  const quickWidgets = widgetCatalog.slice(0, 8);
 
   function addWidget(type: string) {
     const next: WidgetLayoutItem = {
@@ -80,7 +81,14 @@ export function DashboardGrid({ initialLayout, items }: { initialLayout: WidgetL
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1fr_320px]">
-      <div className="rounded-2xl border border-border bg-card/60 p-3">
+      <div className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,24,30,.9),rgba(10,16,21,.9))] p-3">
+        <div className="mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-black/15 px-4 py-3">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Canvas</div>
+            <div className="mt-1 text-sm text-white">Active layout with draggable intelligence widgets</div>
+          </div>
+          <div className="text-xs text-slate-400">{widgets.length} widgets loaded</div>
+        </div>
         <GridLayout className="layout" layout={layout} cols={12} rowHeight={74} width={1080} onLayoutChange={(next) => setLayout(next)}>
           {widgets.map((widget) => (
             <div key={widget.i} className="overflow-hidden">
@@ -89,17 +97,28 @@ export function DashboardGrid({ initialLayout, items }: { initialLayout: WidgetL
           ))}
         </GridLayout>
       </div>
-      <Card>
+      <Card className="border-white/10 bg-[linear-gradient(180deg,rgba(19,31,38,.94),rgba(11,18,23,.92))]">
         <CardHeader>
           <CardTitle>Widget Palette</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-1">
-          {widgetCatalog.map((widget) => (
-            <Button key={widget.id} variant="outline" className="justify-start" onClick={() => addWidget(widget.type)}>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 gap-2">
+            {quickWidgets.map((widget) => (
+              <Button key={widget.id} variant="outline" className="justify-start border-white/10 bg-white/[0.03] text-slate-200 hover:bg-white/[0.06]" onClick={() => addWidget(widget.type)}>
+                <widget.icon className="mr-2 h-4 w-4" />
+                {widget.title}
+              </Button>
+            ))}
+          </div>
+          <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">Full Catalog</div>
+          <div className="grid max-h-[620px] grid-cols-1 gap-2 overflow-auto pr-1 md:grid-cols-2 xl:grid-cols-1">
+            {widgetCatalog.map((widget) => (
+            <Button key={widget.id} variant="outline" className="justify-start border-white/10 bg-transparent text-slate-300 hover:bg-white/[0.04]" onClick={() => addWidget(widget.type)}>
               <widget.icon className="mr-2 h-4 w-4" />
               {widget.title}
             </Button>
           ))}
+          </div>
         </CardContent>
       </Card>
     </div>

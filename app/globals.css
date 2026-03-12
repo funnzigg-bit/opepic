@@ -37,12 +37,24 @@
 body {
   @apply min-h-screen bg-background text-foreground antialiased;
   background-image:
-    radial-gradient(circle at top left, rgba(6, 182, 212, 0.18), transparent 28%),
-    radial-gradient(circle at top right, rgba(249, 115, 22, 0.18), transparent 30%),
-    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    radial-gradient(circle at top left, rgba(6, 182, 212, 0.14), transparent 24%),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 25%),
+    radial-gradient(circle at 50% 0%, rgba(125, 211, 252, 0.06), transparent 35%),
+    linear-gradient(180deg, #081219 0%, #0a151b 45%, #081117 100%);
 }
 
 .panel-grid {
   background-size: 36px 36px;
   background-position: -1px -1px;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: rgba(34, 211, 238, 0.18) !important;
+  border-radius: 18px;
+  border: 1px dashed rgba(125, 211, 252, 0.35);
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  border-right-color: rgba(255, 255, 255, 0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
 }
