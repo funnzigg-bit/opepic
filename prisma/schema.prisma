@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum SourceType {
+  rss
+  api
+  manual
+  video_embed
+  page_monitor
+  twitter
+  x
+  webcam
+  market
+  weather
+  aviation
+  cyber
+}
+
+enum Reliability {
+  official
+  reputable
+  unverified
+}
+
+enum SourceMode {
+  full_ingest
+  metadata_only
+}
+
+enum Topic {
+  sanctions
+  diplomacy
+  nuclear
+  shipping
+  humanitarian
+  protests
+  travel_advisory
+  cyber
+  aviation
+  military
+}
+
+enum Confidence {
+  confirmed
+  reported
+  unverified
+}
+
+enum Sentiment {
+  positive
+  neutral
+  negative
+}
+
+enum NotifyMode {
+  in_app
+  email
+  sms
+}
+
+enum WidgetType {
+  feed
+  map
+  chart
+  kpi
+  ai_brief
+  webcam
+  orbat
+  bda
+  ticker
+  social_pulse
+  weather
+  timeline
+  alert_stream
+  escalation
+  satellite
+  shipping_lane
+  aviation_tracker
+  cyber_heatmap
+}
+
+model Source {
+  id          String      @id @default(cuid())
+  name        String
+  type        SourceType
+  url         String
+  regionTags  String
+  reliability Reliability
+  mode        SourceMode
+  enabled     Boolean     @default(true)
+  allowEmbed  Boolean     @default(false)
+  tosNotes    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  items       Item[]
+}
+
+model Item {
+  id           String     @id @default(cuid())
+  sourceId     String
+  title        String
+  summary      String
+  url          String
+  publishedAt  DateTime
+  fetchedAt    DateTime   @default(now())
+  regionTags   String
+  topics       String
+  confidence   Confidence
+  hash         String     @unique
+  rawJson      String?
+  metadataOnly Boolean    @default(false)
+  sentiment    Sentiment  @default(neutral)
+  source       Source     @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  alertHits    AlertHit[]
+
+  @@index([publishedAt])
+  @@index([sourceId])
+}
+
+model AlertRule {
+  id               String      @id @default(cuid())
+  name             String
+  keywords         String
+  topicFilter      String
+  regionFilter     String
+  confidenceFilter Confidence?
+  enabled          Boolean     @default(true)
+  notifyMode       NotifyMode
+  createdAt        DateTime    @default(now())
+  hits             AlertHit[]
+}
+
+model AlertHit {
+  id          String    @id @default(cuid())
+  alertRuleId String
+  itemId      String
+  createdAt   DateTime  @default(now())
+  alertRule   AlertRule @relation(fields: [alertRuleId], references: [id], onDelete: Cascade)
+  item        Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([alertRuleId, itemId])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String
+  actor       String
+  detailsJson String
+  createdAt   DateTime @default(now())
+}
+
+model CacheEntry {
+  id           String   @id @default(cuid())
+  key          String   @unique
+  etag         String?
+  lastModified String?
+  bodyText     String?
+  json         String?
+  updatedAt    DateTime @updatedAt
+}
+
+model DashboardLayout {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String   @default("Command Center")
+  widgets   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Widget {
+  id        String     @id @default(cuid())
+  type      WidgetType
+  config    String
+  sourceIds String
+}

@@ -1,0 +1,48 @@
+@import "leaflet/dist/leaflet.css";
+@import "react-grid-layout/css/styles.css";
+@import "react-resizable/css/styles.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 205 42% 7%;
+  --foreground: 190 40% 96%;
+  --card: 206 36% 11%;
+  --card-foreground: 190 35% 96%;
+  --popover: 208 33% 10%;
+  --popover-foreground: 190 35% 96%;
+  --primary: 13 89% 58%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 197 50% 17%;
+  --secondary-foreground: 190 35% 96%;
+  --muted: 203 26% 16%;
+  --muted-foreground: 194 18% 68%;
+  --accent: 184 78% 27%;
+  --accent-foreground: 180 60% 96%;
+  --destructive: 352 84% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 196 34% 22%;
+  --input: 196 34% 22%;
+  --ring: 17 97% 65%;
+  --font-sans: "Space Grotesk";
+  --font-mono: "IBM Plex Mono";
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  @apply min-h-screen bg-background text-foreground antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(6, 182, 212, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.18), transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+}
+
+.panel-grid {
+  background-size: 36px 36px;
+  background-position: -1px -1px;
+}
