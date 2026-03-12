@@ -2,6 +2,7 @@ import { Radar } from "lucide-react";
 import { AppShell } from "@/components/shell/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CommandBrief } from "@/components/dashboard/command-brief";
 import { KpiStrip } from "@/components/dashboard/kpi-strip";
 import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
 import { LiveStream } from "@/components/dashboard/live-stream";
@@ -37,6 +38,7 @@ export default async function DashboardPage() {
         </div>
       ) : null}
       <KpiStrip kpis={data.kpis} />
+      <CommandBrief items={data.items} />
       <DashboardGrid initialLayout={commandCenter?.widgets ?? []} items={data.items} />
       <LiveStream />
     </AppShell>
